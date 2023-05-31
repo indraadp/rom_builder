@@ -1,8 +1,8 @@
 env:
-  github_token: ""
-  rclone_config: ""
-  telegram_bot_token: ""
-  telegram_id_channel: ""
+  github_token: "ENCRYPTED[82f83af74c0e902fa9ea9f763b41b5513847c73a2cdfd5967c72729082fb054184b0d846259d6ec2ca39b696257fa497]"
+  rclone_config: "ENCRYPTED[f859cd00e0c2cc8bc81d126d9a7583df253c69080106fdf38a48d39fc2dc7c3295c4f70cdace40c22a8898d840c020ed]"
+  telegram_bot_token: "ENCRYPTED[d80aa65266f76beca9a6a67a88202f7edcf7a3ed9cf08a3a700e829b3d73711994f9248bc0959d2b378d261670c9f050]"
+  telegram_id_channel: "ENCRYPTED[19e230c11b731a244dfc24d0f219d20942d28231026317bbd6bb254474b3b123c74cf7cfddfac58a7431f2e642765b5c]"
 
 task:
   name: "test script"
