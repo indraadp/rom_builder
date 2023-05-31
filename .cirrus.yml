@@ -5,7 +5,7 @@ env:
   telegram_id_channel: "ENCRYPTED[19e230c11b731a244dfc24d0f219d20942d28231026317bbd6bb254474b3b123c74cf7cfddfac58a7431f2e642765b5c]"
 
 task:
-  name: "NusantaraOS Android 11: collecting ccache"
+  name: "NusantaraOS Android 11: final build"
   timeout_in: 120m
   container:
     image: inok2341/anu:latest
@@ -43,9 +43,9 @@ task:
   Build_script:
     - sudo ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build NusantaraOS Android 11 started...."
-  #  - ./final.sh
-  #  - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) completed!"
-    - ./collect.sh
+    - ./final.sh
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) completed!"
+  #  - ./collect.sh
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Compressing ccache...."
 
   Upload_script:
@@ -54,6 +54,6 @@ task:
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading ccache...."
     - rclone copy ccache.tar.gz gdrive:NusantaraCcache -P
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Ccache NusantaraOS Android 11 uploaded successfully!"
-  #  - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading build...."
-  #  - rclone copy ~/rom/out/target/product/juice/Nusantara_*.zip gdrive:ROM -P
-  #  - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) uploaded successfully!"
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading build...."
+    - rclone copy ~/rom/out/target/product/juice/Nusantara_*.zip gdrive:ROM -P
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) uploaded successfully!"
