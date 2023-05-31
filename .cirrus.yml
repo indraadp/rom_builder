@@ -1,0 +1,59 @@
+env:
+  github_token: ""
+  rclone_config: ""
+  telegram_bot_token: ""
+  telegram_id_channel: ""
+
+task:
+  name: ""
+  timeout_in: 120m
+  container:
+    image: inok2341/anu:latest
+    cpu: 8
+    memory: 32G
+
+  Build-Env-Setup_background_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - mkdir -p ~/.config/rclone
+    - echo "$rclone_config" > ~/.rclone.conf
+    - rm -rf ~/ccache
+    - mkdir -p ~/ccache
+    - rclone copy gdrive:NusantaraCcache/ccache.tar.gz ~/ -P
+    - cd ~/
+    - time tar xf ccache.tar.gz
+    - cd ~/
+
+  Storage-Checker_background_script:
+    - df -h
+    - lsblk
+    - ls -l -a -h
+    - ./sleep.sh
+
+  Sync_script:
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Starting sync NusantaraOS Android 11 source...."
+    - rm -rf ~/rom
+    - mkdir -p ~/rom
+    - cd ~/rom
+    - rm -rf * .repo
+    - repo init -q --no-repo-verify --depth=1 -u https://github.com/NusantaraProject-ROM/android_manifest -b 11 -g default,-mips,-darwin,-notdefault
+    - git clone https://github.com/indraadp/local_manifest --depth 1 -b nusantara .repo/local_manifests
+    - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Sync NusantaraOS Android 11 source completed!"
+
+  Build_script:
+    - sudo ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build NusantaraOS Android 11 started...."
+    - ./final.sh
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) completed!"
+    - ./collect.sh
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Compressing ccache...."
+
+  Upload_script:
+    - ./compressing.sh
+    - cd ~/
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading ccache...."
+    - rclone copy ccache.tar.gz gdrive:NusantaraCcache -P
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Ccache NusantaraOS Android 11 uploaded successfully!"
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading build...."
+    - rclone copy ~/rom/out/target/product/juice/Nusantara_*.zip gdrive:ROM -P
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) uploaded successfully!"
