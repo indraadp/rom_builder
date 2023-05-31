@@ -5,7 +5,7 @@ env:
   telegram_id_channel: ""
 
 task:
-  name: ""
+  name: "test script"
   timeout_in: 120m
   container:
     image: inok2341/anu:latest
