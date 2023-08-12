@@ -61,3 +61,4 @@ task:
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading build...."
     - rclone copy ~/rom/out/target/product/juice/Nusantara_*.zip gdrive:ROM -P
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) uploaded successfully!"
+ 
