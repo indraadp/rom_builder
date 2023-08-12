@@ -5,7 +5,7 @@ env:
   telegram_id_channel: "ENCRYPTED[11dea81efffc4af197ef796dc2c3e026a4033f7a3d964e7366e379238690d9339066f1873454f2e037fe75e4ced0c626]"
 
 task:
-  name: "test script"
+  name: "lime: SuperiorOS Android 13: collecting ccache"
   timeout_in: 120m
   container:
     image: inok2341/anu:latest
@@ -22,7 +22,7 @@ task:
     - git config --global credential.helper store --file=~/.git-credentials
     - rm -rf ~/ccache
     - mkdir -p ~/ccache
-    - rclone copy gdrive:NusantaraCcache/ccache.tar.gz ~/ -P
+    - rclone copy gdrive:Superior13limeCcache/ccache.tar.gz ~/ -P
     - cd ~/
     - time tar xf ccache.tar.gz
     - cd ~/
@@ -34,21 +34,21 @@ task:
     - ./sleep.sh
 
   Sync_script:
-    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Starting sync NusantaraOS Android 11 source...."
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Starting sync SuperiorOS Android 13 for Lime source...."
     - rm -rf ~/rom
     - mkdir -p ~/rom
     - cd ~/rom
     - rm -rf * .repo
-    - repo init -q --no-repo-verify --depth=1 -u https://github.com/NusantaraProject-ROM/android_manifest -b 11 -g default,-mips,-darwin,-notdefault
-    - git clone https://github.com/indraadp/local_manifest --depth 1 -b nusantara .repo/local_manifests
+    - repo init -q --no-repo-verify --depth=1 -u https://github.com/SuperiorOS/manifest.git -b thirteen -g default,-mips,-darwin,-notdefault
+    - git clone https://github.com/indraadp/local_manifest --depth 1 -b superior-A13-lime .repo/local_manifests
     - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
-    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Sync NusantaraOS Android 11 source completed!"
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Sync SuperiorOS Android 13 for Lime source completed!"
 
   Build_script:
     - sudo ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build NusantaraOS Android 11 started...."
-    - ./final.sh
-    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) completed!"
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build SuperiorOS Android 13 for Lime started...."
+  #  - ./final.sh
+  #  - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/lime/ && ls SuperiorOS*.zip) completed!"
     - ./collect.sh
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Compressing ccache...."
 
@@ -56,8 +56,8 @@ task:
     - ./compressing.sh
     - cd ~/
     - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading ccache...."
-    - rclone copy ccache.tar.gz gdrive:NusantaraCcache -P
-    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Ccache NusantaraOS Android 11 uploaded successfully!"
-    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading build...."
-    - rclone copy ~/rom/out/target/product/juice/Nusantara_*.zip gdrive:ROM -P
-    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/juice/ && ls Nusantara_*.zip) uploaded successfully!"
+    - rclone copy ccache.tar.gz gdrive:Superior13limeCcache -P
+    - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Ccache SuperiorOS Android 13 for Lime uploaded successfully!"
+  #  - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Uploading build...."
+  #  - rclone copy ~/rom/out/target/product/lime/SuperiorOS*.zip gdrive:ROM -P
+  #  - curl -s https://api.telegram.org/$telegram_bot_token/sendMessage -d chat_id=$telegram_id_channel -d text="Build $(cd ~/rom/out/target/product/lime/ && ls SuperiorOS*.zip) uploaded successfully!"
